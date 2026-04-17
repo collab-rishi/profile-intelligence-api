@@ -1,23 +1,16 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-// import { errorHandler } from "./middlewares/errorHandler.middleware";
-
-dotenv.config();
+import profileRoutes from "./routes/profile.routes";
+import { errorHandler } from "./middlewares/errorHandler.middleware";
 
 const app = express();
-const PORT = process.env.PORT || 8080;
-
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
+app.use("/api/profiles", profileRoutes);
 
-// app.use("/api/profiles", profileRoutes);
 
+app.use(errorHandler);
 
-// app.use(errorHandler);
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+export default app;
