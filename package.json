@@ -9,7 +9,7 @@
     "build": "npx prisma generate && tsc",
     "test": "jest",
     "typecheck": "tsc --pretty --noEmit",
-    "start": "npx ts-node src/index.ts",
+    "start": "node dist/index.js",
     "dev": "nodemon -r ts-node src/index.ts",
     "db:migrate": "NODE_PATH=dist/ node --env-file=.env dist/db/migration.js"
   },
