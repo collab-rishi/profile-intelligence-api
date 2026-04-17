@@ -7,14 +7,22 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
+ let statusCode = err.statusCode || 500;
+  let message = err.message || "Internal Server Error";
 
-  
- res.status(statusCode).json({
+
+  if (err.code === "P2002") {
+    statusCode = 409;
+    message = "Record already exists";
+  }
+
+
+  console.error(`[Error] ${statusCode} - ${message}`);
+
+
+  res.status(statusCode).json({
     status: "error",
-    message: message
-    
+    message: message,
   });
 
    return;
