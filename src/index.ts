@@ -23,6 +23,10 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/kaithheathcheck", (req, res) => {
+  res.status(200).send("OK");
+});
+
 
 app.use("/api/profiles", profileRoutes);
 
