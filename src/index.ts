@@ -14,6 +14,16 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Profile Enrichment API is healthy",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+
 app.use("/api/profiles", profileRoutes);
 
 
