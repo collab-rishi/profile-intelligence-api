@@ -1,4 +1,4 @@
-# Profile Enrichment API
+# Profile Intelligence API
 
 A high-performance RESTful API built with the **NEPT stack** (Node.js, Express, Prisma, TypeScript). This service orchestrates data from multiple external sources (Genderize, Agify, and Nationalize) to create enriched user profiles while ensuring idempotency and strict type safety.
 
