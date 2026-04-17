@@ -1,101 +1,106 @@
-<h1 align="center">NEPT - Node Express Prisma TypeScript Template</h1>
+# Profile Enrichment API
 
-<p align="center">
-    <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js">
-    <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express">
-    <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma">
-    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
-</p>
+A high-performance RESTful API built with the **NEPT stack** (Node.js, Express, Prisma, TypeScript). This service orchestrates data from multiple external sources (Genderize, Agify, and Nationalize) to create enriched user profiles while ensuring idempotency and strict type safety.
 
-## Overview
+##  Features
 
-This is a Node.js, Express, Prisma, and TypeScript template designed to help you quickly set up a robust and scalable backend application.
+- **Data Orchestration:** Parallelized fetching from three external REST APIs.
+- **Idempotency:** Intelligent checks to prevent duplicate data entry while maintaining 200/210 response accuracy.
+- **Strict Validation:** Modern Zod integration for input sanitization and external data verification.
+- **Error Standardization:** Centralized error handling providing consistent JSON responses.
+- **Database Management:** Type-safe queries using Prisma ORM with PostgreSQL.
 
-## Features
+## 🛠️ Tech Stack
 
-- **Node.js**: A JavaScript runtime built on Chrome's V8 JavaScript engine.
-- **Express**: A minimal and flexible Node.js web application framework.
-- **Prisma**: A next-generation ORM that helps you query your database in a type-safe way.
-- **TypeScript**: A strongly typed programming language that builds on JavaScript.
+- **Runtime:** Node.js (v18+)
+- **Framework:** Express.js
+- **Language:** TypeScript
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Validation:** Zod
 
-## Getting Started
+
+## 📋 API Reference
+
+### Profiles
+
+|**Method**|**Endpoint**|**Description**|
+| - | - | - |
+|POST|/api/profiles|Create an enriched profile from a name.|
+|GET|/api/profiles|List all profiles (supports filtering).|
+|GET|/api/profiles/:id|Retrieve a specific profile by UUID.|
+|DELETE|/api/profiles/:id|Remove a profile from the database.|
+
+
+## 🚦 Setup & Installation
 
 ### Prerequisites
+- Node.js v18+
+- PostgreSQL database
 
-- Node.js (v14 or higher)
-- npm (v6 or higher)
-- MongoDB (or any other supported database)
+1. **Clone the repository**
 
-### Installation
-
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/Thund3rHawk/NEPT-Template.git
+   ```bash
+   git clone <your-repo-url>
    ```
-2. Install dependencies:
-   ```sh
-   cd NEPT-Template
+
+2. **Install dependencies**
+
+   ```bash
    npm install
    ```
-3. **Set Up Environment Variables**:
 
-   This project uses environment variables to manage configuration. You can find a sample configuration file named `.env.sample` in the root directory. To set up your environment variables, follow these steps:
+3. **Environment Configuration**
 
-   1. Copy the `.env.sample` file to a new file named `.env`:
-      ```sh
-      cp .env.sample .env
-      ```
-   2. Open the `.env` file and update the values as needed for your local development environment.
+      Create a  .env file in the root directory:
 
-   Make sure not to commit your `.env` file to version control to keep your sensitive information secure.
-
-4. Set up the database:
-   ```sh
-   npx prisma generate
+   ```bash
+      DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+      PORT=8080
    ```
 
-### Running the Application
+4. **Database Migration**
+   ```bash
+  
+   npx prisma migrate dev --name init
+   ```
 
-1. Start the development server:
-   ```sh
+5. **Run the application**
+   ```bash
+    # Development
    npm run dev
    ```
-2. The server will be running at `http://localhost:8080`.
+   
+   ```bash
+   # Production
+   npm run build
+   npm start
+   ```
 
-## Project Structure
+  ## 🧪 Validation & Errors
 
-```
-NEPT
-├── prisma
-│   └── schema.prisma
-├── src
-│   ├── controllers
-│   │   └── user.controller.ts
-│   ├── db
-│   │   └── index.ts
-│   ├── middlewares
-│   │   └── errorHandler.moddleware.ts
-│   ├── routes
-│   │   └── user.routes.ts
-│   ├── services
-│   │   └── userService.ts
-│   ├── utils
-│   │   └── asyncHandler.ts
-│   └── index.ts
-├── .env.sample
-├── .gitignore
-├── .prettierignore
-├── .prettierrc
-├── package-lock.json
-├── package.json
-├── README.md
-└── tsconfig.json
+   The API uses Zod for schema validation. If an input is invalid (e.g., name is not a string), the API returns a 422 Unprocessable Entity.
+
+   If an external API (like Agify) returns a null value for a valid name, the system interprets this as a data failure and returns a 502 Bad Gateway to maintain database quality.
+
+```json
+   {
+      "status": "error",
+      "message": "Name parameter is required"
+   }
 ```
 
-## Contributing
+- 422 Unprocessable Entity : Schema validation failures.
+- 404 Not Found : Resource does not exist.
+- 502 Bad Gateway : External API failure or null response.
 
-Contributions are welcome! Please open an issue or submit a pull request.
+## 📂 Architecture
 
-## License
+The project follows a modular **Controller-Service-Repository** pattern:
 
-This project is licensed under the MIT License.
+- **Controllers:** Handle HTTP request/response logic.
+- **Services:** Orchestrate business logic and external API calls.
+- **Validations:** Zod schemas for "Data at Rest" and "Data in Motion.
+- **Middlewares:** Centralized validation and error catchers.
+
+
