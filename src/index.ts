@@ -11,8 +11,16 @@ const PORT = process.env.PORT || 8080;
 
 
 app.use(cors({ origin: "*" }));
-app.use(express.json());
+app.use(express.json({
+    type: ['application/json', 'text/plain'],
+    limit: '10kb'
+}));
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.path} - Body`, req.body);
+  next();
+});
 
 
 app.get("/", (req, res) => {
