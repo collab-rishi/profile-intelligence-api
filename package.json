@@ -6,7 +6,7 @@
   "scripts": {
     "prepare": "husky",
     "lint": "eslint",
-    "build": "npx prisma generate && tsc",
+    "build": "prisma generate && tsc",
     "test": "jest",
     "typecheck": "tsc --pretty --noEmit",
     "start": "node dist/index.js",
