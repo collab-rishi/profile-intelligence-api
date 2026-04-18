@@ -61,7 +61,7 @@ export class ProfileService {
   }
 
   static async getAllProfiles(filters: any) {
-    // Build a clean 'where' object so we don't pass 'undefined' to Prisma
+    
     const whereClause: any = {};
     
     if (filters.gender) whereClause.gender = filters.gender;
@@ -82,7 +82,7 @@ export class ProfileService {
   }
 
   static async getProfileById(id: string) {
-    // Guard: Prevent Prisma findUnique(undefined) crash
+    
     if (!id) throw new ApiError(400, "Valid ID is required");
 
     const profile = await prisma.profile.findUnique({ where: { id } });

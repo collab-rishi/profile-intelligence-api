@@ -14,7 +14,13 @@ export const validate = (schema: ZodType<any, any, any>) => {
       });
 
   
-      if (Object.keys(req.body).length > 0) req.body = validatedData;
+      // if (Object.keys(req.body).length > 0) req.body = validatedData;
+
+      if (req.method != "GET") {
+        req.body = validatedData;
+      } else {
+        req.query = validatedData;
+      }
       
       next();
     } catch (error) {
