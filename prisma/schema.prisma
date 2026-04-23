@@ -8,16 +8,18 @@ generator client {
 }
 
 model Profile {
-  id                  String   @id
+  id                  String   @id 
   name                String   @unique
   gender              String
   gender_probability  Float
-  sample_size         Int
   age                 Int
   age_group           String
-  country_id          String
+  country_id          String   @db.VarChar(2)
+  country_name        String
   country_probability Float
   created_at          DateTime @default(now())
 
+ 
   @@index([gender, country_id, age_group])
+  @@map("profiles")
 }

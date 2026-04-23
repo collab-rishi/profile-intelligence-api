@@ -38,10 +38,10 @@ export class ProfileService {
           name: name,
           gender: (genderData.gender as string) || "unknown",
           gender_probability: genderData.probability || 0,
-          sample_size: genderData.count || 0,
           age: (agifyData.age as number) || 0,
           age_group: getAgeGroup((agifyData.age as number) || 0),
           country_id: topCountry.country_id,
+          country_name: topCountry.country_id || "Unknown",
           country_probability: topCountry.probability,
         },
       });
