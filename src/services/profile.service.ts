@@ -73,44 +73,47 @@ export class ProfileService {
   }
 
   static async getAllProfiles(filters: ProfileFilters) {
-    const {
-      gender,
-      country_id,
-      age_group,
-      min_age,
-      max_age,
-      min_gender_probability,
-      min_country_probability,
+   const {
+      page,
+      limit,
       sort_by,
       order,
+      ...criteria 
     } = filters;
+
+  
+    const skip = (page - 1) * limit;
 
     
     const where: Prisma.ProfileWhereInput = {
-      gender,
-      country_id,
-      age_group,
-     
-      age: (min_age || max_age) ? {
-        gte: min_age,
-        lte: max_age,
+      gender: criteria.gender,
+      country_id: criteria.country_id,
+      age_group: criteria.age_group,
+      age: (criteria.min_age || criteria.max_age) ? {
+        gte: criteria.min_age,
+        lte: criteria.max_age,
       } : undefined,
-      
-      gender_probability: min_gender_probability ? { gte: min_gender_probability } : undefined,
-      country_probability: min_country_probability ? { gte: min_country_probability } : undefined,
+      gender_probability: criteria.min_gender_probability ? { gte: criteria.min_gender_probability } : undefined,
+      country_probability: criteria.min_country_probability ? { gte: criteria.min_country_probability } : undefined,
     };
 
     
-    const orderBy: Prisma.ProfileOrderByWithRelationInput = sort_by
-      ? { [sort_by]: order || "asc" }
-      : { created_at: "desc" }; 
+    const [total, data] = await Promise.all([
+      prisma.profile.count({ where }),
+      prisma.profile.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: sort_by ? { [sort_by]: order } : { created_at: "desc" },
+      }),
+    ]);
 
-    
-   
-    return await prisma.profile.findMany({
-      where,
-      orderBy,
-    });
+    return {
+      total,
+      data,
+      page,
+      limit,
+    };
   }
 
   static async getProfileById(id: string) {

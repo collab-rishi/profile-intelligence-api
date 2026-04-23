@@ -24,6 +24,9 @@ export const ProfileFilterSchema = z.object({
   
   sort_by: z.enum(["age", "created_at", "gender_probability"]).optional(),
   order: z.enum(["asc", "desc"]).default("asc").optional(),
+
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
 });
 
 export const IdParamSchema = z.object({

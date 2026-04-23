@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ProfileService } from "../services/profile.service";
 import { asyncHandler } from "../utils/asyncHandler";
 import prisma from "../db";
+import { ProfileFilters } from "../validations/profile.schema";
 
 export class ProfileController {
  
@@ -23,14 +24,18 @@ export class ProfileController {
 
   
   static getAllProfiles = asyncHandler(async (req: Request, res: Response) => {
-    const profiles = await ProfileService.getAllProfiles(req.query);
     
-     res.status(200).json({
+    const filters = req.query as unknown as ProfileFilters;
+    const result = await ProfileService.getAllProfiles(filters);
+    
+    
+    res.status(200).json({
       status: "success",
-      count: profiles.length,
-      data: profiles,
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
+      data: result.data,
     });
-    return;
   });
 
   
