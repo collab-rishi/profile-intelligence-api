@@ -4,7 +4,8 @@ import { validate } from "../middlewares/validate.middleware";
 import { 
   CreateProfileSchema, 
   ProfileFilterSchema, 
-  IdParamSchema 
+  IdParamSchema,
+  SearchQuerySchema
 } from "../validations/profile.schema";
 
 const router = Router();
@@ -15,7 +16,11 @@ router.post(
   ProfileController.createProfile
 );
 
-router.get("/search", ProfileController.searchProfiles);
+router.get(
+  "/search",
+  validate(SearchQuerySchema),
+  ProfileController.searchProfiles
+);
 
 router.get(
   "/", 

@@ -34,13 +34,15 @@ export const IdParamSchema = z.object({
 });
 
 export const SearchQuerySchema = z.object({
-  q: z.string().min(1, "Query string 'q' cannot be empty"),
+  q: z.string()
+    .min(1, "Search query 'q' cannot be empty")
+    .max(100, "Search query too long")
+    .trim(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(10),
 });
 
-
-export type SearchQuery = z.infer<typeof SearchQuerySchema>;
+export type SearchQueryInput = z.infer<typeof SearchQuerySchema>;
 export type CreateProfileInput = z.infer<typeof CreateProfileSchema>;
 export type ProfileFilters = z.infer<typeof ProfileFilterSchema>;
 export type IdParam = z.infer<typeof IdParamSchema>;
