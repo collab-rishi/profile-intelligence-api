@@ -15,6 +15,8 @@ router.post(
   ProfileController.createProfile
 );
 
+router.get("/search", ProfileController.searchProfiles);
+
 router.get(
   "/", 
   validate(ProfileFilterSchema), 

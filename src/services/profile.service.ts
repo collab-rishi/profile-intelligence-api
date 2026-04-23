@@ -37,7 +37,7 @@ export class ProfileService {
       const agifyData = AgifySchema.parse(agifyRes.data);
       const nationalizeData = NationalizeSchema.parse(nationalizeRes.data);
 
-      // Guard: If nationalize returns no countries, we need a fallback
+      
       const topCountry = nationalizeData.country.length > 0 
         ? nationalizeData.country.reduce((prev, curr) => 
             curr.probability > prev.probability ? curr : prev
