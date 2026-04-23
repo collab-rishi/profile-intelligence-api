@@ -89,7 +89,7 @@ GET ```/api/profiles/search?q={query}```
 1. **Clone the repository**
 
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/collab-rishi/profile-intelligence-api.git
    ```
 
 2. **Install dependencies**
