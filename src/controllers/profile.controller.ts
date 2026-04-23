@@ -8,28 +8,17 @@ export class ProfileController {
   static createProfile = asyncHandler(async (req: Request, res: Response) => {
     const { name } = req.body; 
 
-   
-    const existingProfile = await prisma.profile.findUnique({
-      where: { name },
-    });
+    
+    const result = await ProfileService.createOrFetchProfile(name);
 
-    if (existingProfile) {
-       res.status(200).json({
-        status: "success",
-        message: "Profile already exists",
-        data: existingProfile,
-      });
-      return;
-    }
-
-   
-    const newProfile = await ProfileService.createProfile(name);
-
-    res.status(201).json({
+    
+    const statusCode = result.isNew ? 201 : 200;
+    
+    res.status(statusCode).json({
       status: "success",
-      data: newProfile,
+      message: result.isNew ? "Profile created" : "Profile already exists",
+      data: result.profile,
     });
-    return;
   });
 
   

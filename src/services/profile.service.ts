@@ -6,9 +6,21 @@ import {
   AgifySchema, 
   NationalizeSchema 
 } from "../validations/external.schema";
+import { Prisma } from "@prisma/client";
+import { ProfileFilters } from "../validations/profile.schema";
 import { getAgeGroup, generateId } from "../utils/profileHelpers";
 
 export class ProfileService {
+
+  static async createOrFetchProfile(name: string) {
+    const existing = await prisma.profile.findUnique({ where: { name } });
+    if (existing) return { profile: existing, isNew: false };
+
+    const newProfile = await this.createProfile(name);
+    return { profile: newProfile, isNew: true };
+  }
+
+  
   
   static async createProfile(name: string) {
     
@@ -60,24 +72,44 @@ export class ProfileService {
     }
   }
 
-  static async getAllProfiles(filters: any) {
-    
-    const whereClause: any = {};
-    
-    if (filters.gender) whereClause.gender = filters.gender;
-    if (filters.country_id) whereClause.country_id = filters.country_id;
-    if (filters.age_group) whereClause.age_group = filters.age_group;
+  static async getAllProfiles(filters: ProfileFilters) {
+    const {
+      gender,
+      country_id,
+      age_group,
+      min_age,
+      max_age,
+      min_gender_probability,
+      min_country_probability,
+      sort_by,
+      order,
+    } = filters;
 
+    
+    const where: Prisma.ProfileWhereInput = {
+      gender,
+      country_id,
+      age_group,
+     
+      age: (min_age || max_age) ? {
+        gte: min_age,
+        lte: max_age,
+      } : undefined,
+      
+      gender_probability: min_gender_probability ? { gte: min_gender_probability } : undefined,
+      country_probability: min_country_probability ? { gte: min_country_probability } : undefined,
+    };
+
+    
+    const orderBy: Prisma.ProfileOrderByWithRelationInput = sort_by
+      ? { [sort_by]: order || "asc" }
+      : { created_at: "desc" }; 
+
+    
+   
     return await prisma.profile.findMany({
-      where: whereClause,
-      select: {
-        id: true,
-        name: true,
-        gender: true,
-        age: true,
-        age_group: true,
-        country_id: true,
-      }
+      where,
+      orderBy,
     });
   }
 
