@@ -13,9 +13,13 @@ export const parseNaturalLanguageQuery = (query: string): Partial<ProfileFilters
   if (/\b(male|males|men|man)\b/.test(normalized)) filters.gender = "male";
   if (/\b(female|females|women|woman)\b/.test(normalized)) filters.gender = "female";
 
+  if (normalized.includes("young")) {
+    filters.min_age = 16;
+    filters.max_age = 24;
+  }
   
   if (normalized.includes("child") || normalized.includes("kid")) filters.age_group = "child";
-  if (normalized.includes("teenager") || normalized.includes("young")) filters.age_group = "teenager";
+  if (normalized.includes("teenager")) filters.age_group = "teenager";
   if (normalized.includes("adult")) filters.age_group = "adult";
   if (normalized.includes("senior") || normalized.includes("old")) filters.age_group = "senior";
 

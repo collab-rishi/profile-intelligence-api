@@ -26,7 +26,7 @@ export const ProfileFilterSchema = z.object({
   order: z.enum(["asc", "desc"]).default("asc").optional(),
 
   page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(50).default(10),
+  limit: z.coerce.number().int().min(1).default(10).transform((val) => (val > 50 ? 50 : val)),
 });
 
 export const IdParamSchema = z.object({

@@ -32,8 +32,8 @@ export class ProfileController {
     
     res.status(200).json({
       status: "success",
-      page: result.page,
-      limit: result.limit,
+      page: Number(result.page),   
+      limit: Number(result.limit),
       total: result.total,
       data: result.data,
     });
